@@ -1,0 +1,60 @@
+import { Platform, StyleSheet } from "react-native";
+
+export const footerStyles = StyleSheet.create({
+     bottomBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingBottom: Platform.OS === "ios" ? 30 : 12,
+    backgroundColor: "#FFF",
+    borderTopWidth: 1,
+    borderTopColor: "#E2E8F0",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  bottomButton: {
+    alignItems: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+  },
+  bottomButtonActive: {
+    marginTop: -25,
+    backgroundColor: "#5E72E4",
+    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    shadowColor: "#5E72E4",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  bottomButtonIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#EBF4FF",
+  },
+  bottomButtonIconActive: {
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+  bottomButtonText: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: "#718096",
+    marginTop: 5,
+  },
+  bottomButtonTextActive: {
+    color: "#FFF",
+  },
+});
