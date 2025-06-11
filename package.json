@@ -18,29 +18,36 @@
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@types/next": "^8.0.7",
     "appwrite": "^17.0.2",
+    "body-parser": "^2.2.0",
     "date-fns": "^4.1.0",
     "expo": "~53.0.9",
     "expo-av": "~15.1.4",
     "expo-blur": "~14.1.4",
     "expo-constants": "~17.1.6",
+    "expo-device": "~7.1.4",
     "expo-font": "~13.3.1",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.7",
     "expo-image-picker": "~16.1.4",
     "expo-linking": "~7.1.5",
     "expo-media-library": "~17.1.6",
+    "expo-notifications": "~0.31.3",
     "expo-print": "~14.1.4",
     "expo-router": "~5.0.6",
+    "expo-server-sdk": "^3.15.0",
     "expo-sharing": "~13.1.5",
     "expo-splash-screen": "~0.30.8",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.4",
     "expo-system-ui": "~5.0.7",
     "expo-web-browser": "~14.1.6",
+    "express": "^5.1.0",
     "jspdf": "^3.0.1",
     "mime": "^4.0.7",
     "mine": "^0.1.0",
+    "next": "^15.3.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
@@ -54,9 +61,7 @@
     "react-native-signature-canvas": "^4.7.4",
     "react-native-text-recognition": "^1.1.1",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "^13.13.5",
-    "expo-notifications": "~0.31.3",
-    "expo-device": "~7.1.4"
+    "react-native-webview": "^13.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -67,5 +72,21 @@
     "postinstall-postinstall": "^2.1.0",
     "typescript": "~5.8.3"
   },
-  "private": true
+  "private": true,
+  "description": "This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sahilkharose07/service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Sahilkharose07/service/issues"
+  },
+  "homepage": "https://github.com/Sahilkharose07/service#readme"
 }

@@ -33,7 +33,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
 const UserNotificationPage = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -58,15 +57,52 @@ const UserNotificationPage = () => {
     };
   }, []);
 
-  // Register for push notifications
+  
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      if (token) {
+    const registerAndSaveToken = async () => {
+      try {
+        const token = await sendPushNotification();
+        if (!token) return;
+        
         setExpoPushToken(token);
         console.log('Expo Push Token:', token);
-        // You can save this token to your Appwrite user record if needed
+        
+        // Get current user
+        const user = await account.get();
+        setUserEmail(user.email);
+        
+        // Check if token already exists for this user
+        const existingTokens = await databases.listDocuments(
+          DATABASE_ID,
+          NOTIFICATIONS_COLLECTION,
+          [
+            Query.equal('userEmail', user.email),
+            Query.equal('isDeviceToken', true)
+          ]
+        );
+        
+        // If token doesn't exist, create new document
+        if (existingTokens.documents.length === 0) {
+          await databases.createDocument(
+            DATABASE_ID,
+            NOTIFICATIONS_COLLECTION,
+            'unique()',
+            {
+              userEmail: user.email,
+              expoPushToken: token,
+              isDeviceToken: true,
+              description: 'Device registration token',
+              isRead: true
+            }
+          );
+          console.log('Push token saved to notifications collection');
+        }
+      } catch (err) {
+        console.log('Failed to register push token:', err);
       }
-    });
+    };
+
+    registerAndSaveToken();
 
     const subscription = Notifications.addNotificationReceivedListener(notification => {
       console.log('Notification received:', notification);
@@ -78,13 +114,27 @@ const UserNotificationPage = () => {
     };
   }, []);
 
-  // Fetch Appwrite notifications
+  // Play notification sound
+  const playNotificationSound = async () => {
+    try {
+      if (soundRef.current) {
+        await soundRef.current.replayAsync();
+      }
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (error) {
+      console.log('Error playing sound', error);
+    }
+  };
+
+  // Fetch only actual notifications (excluding device tokens)
   const fetchNotifications = async (email: string) => {
     try {
       const res = await databases.listDocuments(DATABASE_ID, NOTIFICATIONS_COLLECTION, [
         Query.equal('userEmail', email),
-        Query.orderDesc('createdAt'),
+        Query.equal('isDeviceToken', false),
+        Query.orderDesc('$createdAt'),
       ]);
+      
       const newNotifications = res.documents.filter(doc => !doc.isRead);
       if (newNotifications.length > previousCount) {
         playNotificationSound();
@@ -98,19 +148,7 @@ const UserNotificationPage = () => {
     }
   };
 
-  
-  const playNotificationSound = async () => {
-    try {
-      if (soundRef.current) {
-        await soundRef.current.replayAsync();
-      }
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch (error) {
-      console.log('Error playing sound', error);
-    }
-  };
-
-  // Mark a notification as read
+  // Mark notification as read
   const markAsRead = async (id: string) => {
     try {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -123,6 +161,7 @@ const UserNotificationPage = () => {
     }
   };
 
+
   const onRefresh = () => {
     setRefreshing(true);
     if (userEmail) {
@@ -130,6 +169,7 @@ const UserNotificationPage = () => {
     }
   };
 
+  
   useEffect(() => {
     const getUserAndFetch = async () => {
       try {
@@ -143,6 +183,7 @@ const UserNotificationPage = () => {
     getUserAndFetch();
   }, []);
 
+  
   const deleteAllNotifications = async () => {
     Alert.alert('Delete All Notifications', 'Are you sure you want to delete all unread notifications?', [
       { text: 'Cancel', style: 'cancel' },
@@ -164,6 +205,33 @@ const UserNotificationPage = () => {
       },
     ]);
   };
+
+   const sendPushNotification = async () => {
+  try {
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+      to: 'ExponentPushToken[mHsAuFGCFLxaZRPBKVUzX_]', 
+      sound: 'default',
+      title: 'Service Vale Notification',
+      body: 'you have a new notification',
+      data: { extraData: 'any value' },
+      icon: '../../assets/images/logo', 
+      }),
+    });
+
+    const result = await response.json();
+    console.log('Push sent response:', result);
+  } catch (error) {
+    console.error('Error sending push notification:', error);
+  }
+};
+  
+
 
   const renderItem = ({ item }: { item: any }) => (
     <View style={styles.notificationCard}>
@@ -220,25 +288,7 @@ const UserNotificationPage = () => {
   );
 };
 
-export default UserNotificationPage;
 
-// Helper function
-async function registerForPushNotificationsAsync() {
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      Alert.alert('Permission required', 'Enable notifications in settings.');
-      return null;
-    }
-    const token = await Notifications.getExpoPushTokenAsync();
-    return token.data;
-  } else {
-    Alert.alert('Device error', 'Must use physical device for push notifications.');
-    return null;
-  }
-}
+
+
+export default UserNotificationPage;
