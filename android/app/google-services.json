@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "465734495923",
+    "project_id": "push-notification-service-vale",
+    "storage_bucket": "push-notification-service-vale.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465734495923:android:40c17ffca1a76a8909cac6",
+        "android_client_info": {
+          "package_name": "com.markwatson.service_vale"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHRwsIdP75QDJeUNMa1BYE9Ck3rgHGCD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
